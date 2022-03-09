@@ -1,9 +1,8 @@
 package db
 
-import "kitchenmaniaapi/domain/entity"
+import "wallet-engine/domain/entity"
 
-type DbInterface interface {
-	NewUser(user *entity.User) error
-	FindUserByEmail(email string) (*entity.User, error)
-	CreatePost(blog entity.Blog) error
+type DBinterface interface{
+	NewWallet (user entity.User) (entity.User,error)
+	
 }

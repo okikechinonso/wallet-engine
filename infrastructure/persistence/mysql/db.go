@@ -1,21 +1,16 @@
 package mysql
 
 import (
-	"context"
 	"fmt"
-	"kitchenmaniaapi/domain/entity"
 	"log"
 	"os"
 
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 type Database struct {
-	PgDB        *gorm.DB
-	MongoClient *mongo.Client
+	PgDB *gorm.DB
 }
 
 func (d *Database) Init() {
@@ -37,12 +32,6 @@ func (d *Database) Init() {
 	if err != nil {
 		log.Fatalf("unable to connect to database postgresDB %v", err)
 	}
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(os.Getenv("MONGO_URI")))
-
-	if err != nil {
-		log.Fatalf("unable to connect to database MongoDB %v", err)
-	}
-	d.MongoClient = client
 
 	log.Println("connected to databases")
 	d.PgDB = db
