@@ -1,9 +1,7 @@
 package main
 
 import (
-	"kitchenmaniaapi/application/handlers"
-	"kitchenmaniaapi/application/server"
-	"kitchenmaniaapi/infrastructure/persistence/dbconn"
+	
 	"log"
 	"os"
 
