@@ -2,12 +2,12 @@ package server
 
 import (
 	"fmt"
-	"kitchenmaniaapi/application/handlers"
-	"kitchenmaniaapi/application/middleware"
 	"log"
 	"net/http"
 	"os"
 	"time"
+	"wallet-engine/application/handlers"
+	"wallet-engine/application/middleware"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -19,15 +19,11 @@ type Server struct {
 
 func (s *Server) defineRoute(router *gin.Engine) {
 	apirouter := router.Group("/api/v1")
-	apirouter.POST("/signup", s.App.SignUp())
-	apirouter.POST("/login", s.App.Login())
+	apirouter.POST("/create", s.App.CreateBlog())
 
 	authorized := apirouter.Group("/")
 	authorized.Use(middleware.Authorize(s.App.DB.FindUserByEmail, s.App.DB.TokenInBlacklist))
-	authorized.POST("/create", s.App.CreateBlog())
-	authorized.POST("/updateblog",s.App.UpdatePost())
-	authorized.GET("/posts",s.App.GetAllPost())
-	authorized.DELETE("/delete",s.App.DeletePost())
+
 }
 
 func (s *Server) setupRoute() *gin.Engine {
@@ -70,14 +66,12 @@ func (s *Server) setupRoute() *gin.Engine {
 func (s *Server) Start() {
 	r := s.setupRoute()
 	port := os.Getenv("PORT")
-	
+
 	server := &http.Server{
-		Addr:    ":"+port,
+		Addr:    ":" + port,
 		Handler: r,
 	}
 	if err := server.ListenAndServe(); err != nil {
 		log.Fatal("unable to start serve", err)
 	}
 }
-
-

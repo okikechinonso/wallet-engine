@@ -1,13 +1,12 @@
 package middleware
 
 import (
-	"kitchenmaniaapi/domain/entity"
-	"kitchenmaniaapi/domain/service"
-	"kitchenmaniaapi/interfaces/response"
 	"log"
 	"net/http"
 	"os"
 	"time"
+	"wallet-engine/domain/entity"
+	"wallet-engine/infrastructure/response"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
