@@ -1,9 +1,11 @@
 package main
 
 import (
-	
 	"log"
 	"os"
+	"wallet-engine/application/handlers"
+	"wallet-engine/application/server"
+	"wallet-engine/infrastructure/persistence/mysql"
 
 	"github.com/joho/godotenv"
 )
@@ -16,9 +18,9 @@ func main() {
 			log.Fatalf("couldn't load env vars: %v", err)
 		}
 	}
-	db := &dbconn.Database{}
-	db.Init()
-	db.Migrate()
-	s := server.Server{App: handlers.App{DB: db}}
+	database := &mysql.Database{}
+	database.Init()
+	database.Migrate()
+	s := server.Server{App: handlers.App{DB: database}}
 	s.Start()
 }

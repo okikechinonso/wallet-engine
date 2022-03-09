@@ -1,5 +1,7 @@
 package handlers
 
-type App struct{
-	DB db.DbInterface
+import "wallet-engine/interfaces/db"
+
+type App struct {
+	DB db.Persistor
 }
