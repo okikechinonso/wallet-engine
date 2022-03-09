@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"wallet-engine/domain/entity"
 
-	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/driver/mysql"
 )
 
 type Database struct {
@@ -14,21 +15,18 @@ type Database struct {
 }
 
 func (d *Database) Init() {
-	host := os.Getenv("DB_HOST")
 	user := os.Getenv("DB_USER")
 	password := os.Getenv("DB_PASS")
 	dbName := os.Getenv("DB_NAME")
-	port := os.Getenv("DB_PORT")
-	sslmode := os.Getenv("DB_MODE")
-	var dns string
+	var dsn string
 	databaseurl := os.Getenv("DATABASE_URL")
 	if databaseurl == "" {
-		dns = fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s", host, user, password, dbName, port, sslmode)
+		dsn = fmt.Sprintf( "%s:%s@tcp(127.0.0.1:3306)/%s?charset=utf8mb4&parseTime=True&loc=Local", user,password, dbName,)
 	} else {
-		dns = databaseurl
+		dsn = databaseurl
 	}
 
-	db, err := gorm.Open(postgres.Open(dns), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("unable to connect to database postgresDB %v", err)
 	}
@@ -37,7 +35,7 @@ func (d *Database) Init() {
 	d.PgDB = db
 }
 func (d *Database) Migrate() {
-	err := d.PgDB.AutoMigrate(&entity.User{}, &entity.Blacklist{})
+	err := d.PgDB.AutoMigrate(&entity.User{})
 	if err != nil {
 		log.Printf("%s", err)
 	}
