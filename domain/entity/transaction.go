@@ -8,7 +8,7 @@ type Transaction struct {
 	RecipientWalletAddress string    `json:"Recipient_walllet_address"`
 	UserID                 string    `json:"user_id" gorm:"foreignkey:User(id)"`
 	Phone                  string    `json:"phone"`
-	Amount                 string    `json:"amount"`
+	Amount                 int64     `json:"amount"`
 	Currency               string    `json:"currency"`
 	TransactionType        string    `json:"transaction_type"`
 	CreatedAt              time.Time `json:"created_at"`
