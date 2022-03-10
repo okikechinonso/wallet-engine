@@ -20,10 +20,12 @@ type Server struct {
 func (s *Server) defineRoute(router *gin.Engine) {
 	apirouter := router.Group("/api/v1")
 	apirouter.POST("/create", s.App.CreateWallet())
+	apirouter.POST("/login",s.App.Login())
 
 	authorized := apirouter.Group("/")
 	authorized.Use(middleware.Authorize(s.App.DB.FindUserByEmail, s.App.DB.TokenInBlacklist))
-
+	authorized.POST("/credit",s.App.CreditWallet())
+	authorized.POST("/debit",s.App.DebitWallet())
 }
 
 func (s *Server) setupRoute() *gin.Engine {
