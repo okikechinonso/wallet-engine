@@ -26,8 +26,9 @@ func (a *App) CreditWallet() gin.HandlerFunc {
 			response.JSON(c, "unable to get amount", http.StatusInternalServerError, nil)
 			return
 		}
+		detail.Amount = detail.Amount * 100
 		if detail.Amount == 0 {
-			response.JSON(c, "insert amount", http.StatusInternalServerError, nil)
+			response.JSON(c, "insert amount", http.StatusBadRequest, nil)
 			return
 		}
 		user := userI.(*entity.User)
@@ -38,7 +39,7 @@ func (a *App) CreditWallet() gin.HandlerFunc {
 		}
 		id := uuid.New().String()
 		transaction := service.NewTransaction(id, user.Phone, "", user.ID, "credit",detail.Amount)
-		wallet.Balance += detail.Amount*100
+		wallet.Balance += detail.Amount
 
 		err = a.DB.CreateTransaction(transaction)
 		if err != nil {
