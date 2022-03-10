@@ -30,11 +30,13 @@ type User struct {
 	Password       string `json:"password" gorm:"-" binding:"required" form:"password"`
 	HashedPassword string `json:"-,omitempty" gorm:"not null"`
 	Phone          string `json:"phone,omitempty"`
-	Active         bool   `json:"active" gorm:"default:false"`
+	UserWallet     Wallet `json:"user_wallet"`
 }
 
-type Wallet struct{
+type Wallet struct {
 	Model
-	WalletAddress string	`json:"wallet_address"`
-	
+	WalletAddress string `json:"wallet_address"`
+	UserID        string `json:"user_id"`
+	Balance       int64  `json:"balance"`
+	Active        bool   `json:"active" gorm:"default:false"`
 }
