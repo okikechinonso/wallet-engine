@@ -2,6 +2,10 @@ package mysql
 
 import "wallet-engine/domain/entity"
 
+func NewUser(user entity.User) error  {
+	return nil
+}
+
 func (d *Database) NewWallet(user entity.User) (*entity.User,error) {
 	result := d.PgDB.Create(user)
 	return nil,result.Error

@@ -36,7 +36,7 @@ type User struct {
 type Wallet struct {
 	Model
 	WalletAddress string `json:"wallet_address"`
-	UserID        string `json:"user_id"`
+	UserID        string `json:"user_id"  gorm:"foreignkey:User(id)"`
 	Balance       int64  `json:"balance"`
 	Active        bool   `json:"active" gorm:"default:false"`
 }

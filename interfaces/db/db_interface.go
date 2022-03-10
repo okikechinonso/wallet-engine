@@ -3,6 +3,7 @@ package db
 import "wallet-engine/domain/entity"
 
 type Persistor interface {
+	NewUser(user entity.User) error
 	NewWallet(user entity.User) (*entity.User, error)
 	FindUserByEmail(email string) (*entity.User, error)
 	CreditdWallet(amount int64) error
