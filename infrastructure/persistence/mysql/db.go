@@ -35,6 +35,7 @@ func (d *Database) Init() {
 	d.PgDB = db
 }
 func (d *Database) Migrate() {
+	
 	err := d.PgDB.AutoMigrate(&entity.User{})
 	if err != nil {
 		log.Printf("%s", err)
