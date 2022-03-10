@@ -30,7 +30,6 @@ type User struct {
 	Password       string `json:"password" gorm:"-" binding:"required" form:"password"`
 	HashedPassword string `json:"-,omitempty" gorm:"not null"`
 	Phone          string `json:"phone" gorm:"not null" binding:"required"`
-	UserWallet     Wallet `json:"user_wallet,omitempty"`
 }
 
 type Wallet struct {
