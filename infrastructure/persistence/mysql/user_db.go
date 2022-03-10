@@ -52,3 +52,7 @@ func (d *Database) UpdateWallet(wallet entity.Wallet) error {
 	result := d.PgDB.Model(&wallet).Where("wallet_address = ?", wallet.WalletAddress).Update("balance", wallet.Balance)
 	return result.Error
 }
+func (d *Database) ActiveWallet (wallet entity.Wallet) error{
+	result := d.PgDB.Model(&wallet).Where("wallet_address = ?", wallet.WalletAddress).Update("active", wallet.Active)
+	return result.Error
+}
