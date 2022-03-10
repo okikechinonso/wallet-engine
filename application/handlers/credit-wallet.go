@@ -33,6 +33,10 @@ func (a *App) CreditWallet() gin.HandlerFunc {
 		}
 		user := userI.(*entity.User)
 		wallet, err := a.DB.FindWallet(user.Phone)
+		if !wallet.Active {
+			response.JSON(c, "wallet not active", http.StatusInternalServerError, nil)
+			return
+		}
 		if err != nil {
 			response.JSON(c, "no wallet found", http.StatusInternalServerError, nil)
 			return
