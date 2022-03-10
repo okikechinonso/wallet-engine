@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (app *App) DeletePost() gin.HandlerFunc {
+func (app *App) DebitWallet() gin.HandlerFunc {
 	return func(c *gin.Context) {
 	}
 }
