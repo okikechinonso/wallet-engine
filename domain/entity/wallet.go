@@ -29,14 +29,14 @@ type User struct {
 	Email          string `json:"email" gorm:"not null" binding:"required" form:"email"`
 	Password       string `json:"password" gorm:"-" binding:"required" form:"password"`
 	HashedPassword string `json:"-,omitempty" gorm:"not null"`
-	Phone          string `json:"phone,omitempty"`
-	UserWallet     Wallet `json:"user_wallet"`
+	Phone          string `json:"phone" gorm:"not null" binding:"required"`
+	UserWallet     Wallet `json:"user_wallet,omitempty"`
 }
 
 type Wallet struct {
 	Model
 	WalletAddress string `json:"wallet_address"`
 	UserID        string `json:"user_id"  gorm:"foreignkey:User(id)"`
-	Balance       int64  `json:"balance"`
+	Balance       int64  `json:"balance" gorm:"default:0"`
 	Active        bool   `json:"active" gorm:"default:false"`
 }
