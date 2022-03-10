@@ -13,6 +13,7 @@ type Persistor interface {
 	GetPhone (userPhone string) (string, error)
 	CreateTransaction (transaction *entity.Transaction) error
 	UpdateWallet (wallet entity.Wallet) error
+	ActiveWallet (wallet entity.Wallet) error
 }
 
 type Getter interface {
