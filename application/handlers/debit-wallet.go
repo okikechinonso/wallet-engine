@@ -38,7 +38,7 @@ func (a *App) DebitWallet() gin.HandlerFunc {
 			response.JSON(c, "wallet not active", http.StatusInternalServerError, nil)
 			return
 		}
-		
+
 		if err != nil {
 			response.JSON(c, "no wallet found", http.StatusInternalServerError, nil)
 			return
@@ -61,7 +61,7 @@ func (a *App) DebitWallet() gin.HandlerFunc {
 			response.JSON(c, "unable to perform transaction", http.StatusInternalServerError, nil)
 			return
 		}
-
+		transaction.Amount = transaction.Amount/100
 		response.JSON(c, "Desposit successfull", http.StatusOK, gin.H{
 			"transaction": transaction,
 			"balance":     wallet.Balance / 100,
