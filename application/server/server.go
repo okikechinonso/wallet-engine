@@ -26,7 +26,7 @@ func (s *Server) DefineRoute(router *gin.Engine) {
 	authorized.Use(middleware.Authorize(s.App.DB.FindUserByEmail, s.App.DB.TokenInBlacklist))
 	authorized.POST("/credit", s.App.CreditWallet())
 	authorized.POST("/debit", s.App.DebitWallet())
-	authorized.PUT("/activate", s.App.ActiveWallet())
+	authorized.PUT("/activate", s.App.ActivateWallet())
 }
 
 func (s *Server) setupRoute() *gin.Engine {

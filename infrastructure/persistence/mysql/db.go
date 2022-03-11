@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 	"wallet-engine/domain/entity"
 
-	"gorm.io/gorm"
 	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 type Database struct {
@@ -21,7 +22,7 @@ func (d *Database) Init() {
 	var dsn string
 	databaseurl := os.Getenv("DATABASE_URL")
 	if databaseurl == "" {
-		dsn = fmt.Sprintf( "%s:%s@tcp(127.0.0.1:3306)/%s?charset=utf8mb4&parseTime=True&loc=Local", user,password, dbName,)
+		dsn = fmt.Sprintf("%s:%s@tcp(127.0.0.1:3306)/%s?charset=utf8mb4&parseTime=True&loc=Local", user, password, dbName)
 	} else {
 		dsn = databaseurl
 	}
@@ -35,8 +36,13 @@ func (d *Database) Init() {
 	d.PgDB = db
 }
 func (d *Database) Migrate() {
-	
+
 	err := d.PgDB.AutoMigrate(&entity.User{})
+	if err != nil {
+		log.Printf("%s", err)
+	}
+	time.Sleep(time.Second)
+	err = d.PgDB.AutoMigrate(&entity.Wallet{}, &entity.Transaction{}, &entity.Blacklist{})
 	if err != nil {
 		log.Printf("%s", err)
 	}

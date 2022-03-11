@@ -11,6 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// CreateWallet creates wallet
 func (a *App) CreateWallet() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		user := &entity.User{}
@@ -22,6 +23,7 @@ func (a *App) CreateWallet() gin.HandlerFunc {
 			return
 		}
 
+		//hash the password
 		hashedPassword, err := helpers.GenerateHashPassword(user.Password)
 		if err != nil {
 			response.JSON(c, "internal server error", http.StatusInternalServerError, nil)
@@ -40,6 +42,7 @@ func (a *App) CreateWallet() gin.HandlerFunc {
 				response.JSON(c, "wallet already exist", http.StatusInternalServerError, nil)
 				return
 			}
+			//Saves the user
 			user, err = a.DB.NewUser(*user)
 			if err != nil {
 				response.JSON(c, "Error creating user", http.StatusInternalServerError, nil)
@@ -47,14 +50,14 @@ func (a *App) CreateWallet() gin.HandlerFunc {
 			}
 			data["user"] = user
 
+			//Create wallet based on the phone number
 			wallet, err = a.DB.NewWallet(user.Phone, user.ID)
-
 			if err != nil {
 				response.JSON(c, "Error creating wallet", http.StatusInternalServerError, nil)
 				return
 			}
+
 			data["wallet"] = wallet
-			log.Println(user, "here")
 			response.JSON(c, "wallet created successfully", http.StatusOK, data)
 			return
 		}

@@ -8,7 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (a *App) ActiveWallet() gin.HandlerFunc {
+// ActivateWallet activate or deactivate wallet
+func (a *App) ActivateWallet() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		_, ok := c.Get("user")
 		if !ok {
@@ -17,14 +18,20 @@ func (a *App) ActiveWallet() gin.HandlerFunc {
 		}
 		walletAddress := c.Query("wallet_address")
 		log.Println("here")
+
+		//gets the wallet of a user by address
 		wallet, err := a.DB.FindWallet(walletAddress)
 		if err != nil {
 			log.Println("here")
 			response.JSON(c, "wallet doesn't exist", http.StatusNotFound, nil)
 			return
 		}
+
+		//check if the wallet is active
 		if !wallet.Active {
 			wallet.Active = true
+
+			//activate wallet if wallet is not active
 			err = a.DB.ActiveWallet(*wallet)
 			log.Println("here")
 			if err != nil {
@@ -34,6 +41,8 @@ func (a *App) ActiveWallet() gin.HandlerFunc {
 			response.JSON(c, "account dectivated", http.StatusCreated, wallet)
 			return
 		}
+
+		//deactivate wallet if wallet is active
 		wallet.Active = false
 		err = a.DB.ActiveWallet(*wallet)
 		if err != nil {
