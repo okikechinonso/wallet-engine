@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"log"
 	"net/http"
 	"wallet-engine/domain/entity"
 	"wallet-engine/domain/service"
@@ -44,7 +45,8 @@ func (a *App) DebitWallet() gin.HandlerFunc {
 			return
 		}
 		if wallet.Balance == 0 || wallet.Balance < detail.Amount {
-			response.JSON(c, "insufficient fund",http.StatusBadRequest,nil)
+			log.Println(wallet.Balance, detail.Amount)
+			response.JSON(c, "insufficient fund", http.StatusBadRequest, nil)
 			return
 		}
 		id := uuid.New().String()
@@ -61,7 +63,7 @@ func (a *App) DebitWallet() gin.HandlerFunc {
 			response.JSON(c, "unable to perform transaction", http.StatusInternalServerError, nil)
 			return
 		}
-		transaction.Amount = transaction.Amount/100
+		transaction.Amount = transaction.Amount / 100
 		response.JSON(c, "Desposit successfull", http.StatusOK, gin.H{
 			"transaction": transaction,
 			"balance":     wallet.Balance / 100,
