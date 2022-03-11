@@ -18,9 +18,10 @@ func (a *App) Login() gin.HandlerFunc {
 			Email    string `json:"email" binding:"required"`
 			Password string `json:"password" binding:"required"`
 		}{}
+
 		err := helpers.Decode(c, &loginDetail)
 		if err != nil {
-			log.Println(err)
+			log.Println("here", 24)
 			response.JSON(c, "all fields are required", http.StatusBadRequest, loginDetail)
 			return
 		}
@@ -42,12 +43,12 @@ func (a *App) Login() gin.HandlerFunc {
 
 		accessToken, err := token.GenerateToken(jwt.SigningMethodHS256, accessClaims, &secret)
 		if err != nil {
-			response.JSON(c, "Unable to generate accesstoken", http.StatusUnauthorized, nil,)
+			response.JSON(c, "Unable to generate accesstoken", http.StatusUnauthorized, nil)
 			return
 		}
 		refreshToken, err := token.GenerateToken(jwt.SigningMethodHS256, refresheClaims, &secret)
 		if err != nil {
-			response.JSON(c, "Unable to generate refreshtoken", http.StatusUnauthorized, nil )
+			response.JSON(c, "Unable to generate refreshtoken", http.StatusUnauthorized, nil)
 			return
 		}
 		user.HashedPassword = ""
