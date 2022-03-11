@@ -16,10 +16,12 @@ func (a *App) CreateWallet() gin.HandlerFunc {
 		user := &entity.User{}
 		wallet := &entity.Wallet{}
 		err := helpers.Decode(c, &user)
+
 		if err != nil {
 			response.JSON(c, err.Error(), http.StatusBadRequest, nil)
 			return
 		}
+
 		hashedPassword, err := helpers.GenerateHashPassword(user.Password)
 		if err != nil {
 			response.JSON(c, "internal server error", http.StatusInternalServerError, nil)
@@ -28,8 +30,10 @@ func (a *App) CreateWallet() gin.HandlerFunc {
 
 		user.Email = strings.ToLower(user.Email)
 		user.HashedPassword = string(hashedPassword)
+		user.Password = ""
 		_, err = a.DB.FindUserByEmail(user.Email)
 		if err != nil {
+			log.Println("here")
 			data := make(map[string]interface{})
 			_, err = a.DB.FindWallet(user.Phone)
 			if err == nil {
@@ -44,7 +48,7 @@ func (a *App) CreateWallet() gin.HandlerFunc {
 			data["user"] = user
 
 			wallet, err = a.DB.NewWallet(user.Phone, user.ID)
-			
+
 			if err != nil {
 				response.JSON(c, "Error creating wallet", http.StatusInternalServerError, nil)
 				return
