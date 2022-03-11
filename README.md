@@ -62,9 +62,12 @@ payload
 ```
 
 ### CreditWallet
-Before testing this endpoint, copy the login access_token provided during login and use it to set the Bearer token of your Authorization in postman with the access_token provided
-endpoint `localhost:<PORT>/api/v1/credit`
-payload
+Before testing this endpoint, copy the login access_token provided during login and use it to set the Bearer token of your Authorization in postman with the access_token provided.  
+Pndpoint:
+```
+localhost:<PORT>/api/v1/credit
+```
+Payload
 ```
 {
 "amount": <enter amount(intergers or decimals)> 
@@ -72,7 +75,10 @@ payload
 ```
 
 ### DebitWallet 
-endpoint ``localhost:<PORT>/api/v1/debit``
+Endpoint 
+```
+localhost:<PORT>/api/v1/debit
+```
 payload
 ```
 {
@@ -81,8 +87,11 @@ payload
 ```
 
 ### ActivateWallet
-
-endpoint `localhost:<PORT>/api/v1/activate?wallet_address=<PHONE>`
+This endpoint either activate or deactivates a wallet depending on the status of the wallet.  
+endpoint 
+```
+localhost:<PORT>/api/v1/activate?wallet_address=<PHONE>
+```
 
 
 
