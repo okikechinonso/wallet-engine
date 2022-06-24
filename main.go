@@ -18,7 +18,7 @@ func main() {
 			log.Fatalf("couldn't load env vars: %v", err)
 		}
 	}
-	database := &mysql.Database{}
+	database := &db.Database{}
 	database.Init()
 	database.Migrate()
 	s := server.Server{App: handlers.App{DB: database}}

@@ -1,39 +1,56 @@
-package mysql
+package db
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
 	"time"
 	"wallet-engine/domain/entity"
 
-	"gorm.io/driver/mysql"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 type Database struct {
-	PgDB *gorm.DB
+	PgDB   *gorm.DB
+	Client *mongo.Client
 }
 
 func (d *Database) Init() {
+	host := os.Getenv("DB_HOST")
 	user := os.Getenv("DB_USER")
 	password := os.Getenv("DB_PASS")
 	dbName := os.Getenv("DB_NAME")
-	var dsn string
+	port := os.Getenv("DB_PORT")
+	sslmode := os.Getenv("DB_MODE")
+	var dns string
 	databaseurl := os.Getenv("DATABASE_URL")
 	if databaseurl == "" {
-		dsn = fmt.Sprintf("%s:%s@tcp(127.0.0.1:3306)/%s?charset=utf8mb4&parseTime=True&loc=Local", user, password, dbName)
+		dns = fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s", host, user, password, dbName, port, sslmode)
 	} else {
-		dsn = databaseurl
+		dns = databaseurl
 	}
 
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(dns), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("unable to connect to database postgresDB %v", err)
 	}
 
-	log.Println("connected to databases")
 	d.PgDB = db
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(os.Getenv("MONGO_PORT")))
+	if err != nil {
+		panic(err)
+	}
+	// Ping the primary
+	if err = client.Ping(context.TODO(), readpref.Primary()); err != nil {
+		panic(err)
+	}
+	d.Client = client
+	fmt.Println("Successfully connected to database.")
 }
 func (d *Database) Migrate() {
 
@@ -42,7 +59,7 @@ func (d *Database) Migrate() {
 		log.Printf("%s", err)
 	}
 	time.Sleep(time.Second)
-	err = d.PgDB.AutoMigrate(&entity.Wallet{}, &entity.Transaction{}, &entity.Blacklist{})
+	err = d.PgDB.AutoMigrate(&entity.Wallet{}, &entity.Transaction{}, &entity.Blacklist{}, &entity.Movie{})
 	if err != nil {
 		log.Printf("%s", err)
 	}

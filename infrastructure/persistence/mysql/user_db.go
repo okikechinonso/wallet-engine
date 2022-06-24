@@ -1,8 +1,15 @@
-package mysql
+package db
 
 import (
+	"context"
+	"log"
 	"wallet-engine/domain/entity"
+
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
+
+const limit = 10
 
 func (d *Database) NewUser(user entity.User) (*entity.User, error) {
 	result := d.PgDB.Create(&user)
@@ -52,7 +59,26 @@ func (d *Database) UpdateWallet(wallet entity.Wallet) error {
 	result := d.PgDB.Model(&wallet).Where("wallet_address = ?", wallet.WalletAddress).Update("balance", wallet.Balance)
 	return result.Error
 }
-func (d *Database) ActiveWallet (wallet entity.Wallet) error{
+func (d *Database) ActiveWallet(wallet entity.Wallet) error {
 	result := d.PgDB.Model(&wallet).Where("wallet_address = ?", wallet.WalletAddress).Update("active", wallet.Active)
 	return result.Error
+}
+
+func (d Database) GetMovies(page int) ([]entity.Movie, error) {
+	l := int64(limit)
+	skip := int64((page * limit) - limit)
+	option := options.FindOptions{Limit: &l, Skip: &skip}
+	filter := bson.D{}
+	coll := d.Client.Database("sample_mflix").Collection("comments")
+
+	cursor, err := coll.Find(context.TODO(), filter, &option)
+	if err != nil {
+		log.Print("here")
+		return nil, err
+	}
+	moveis := []entity.Movie{}
+	if err = cursor.All(context.TODO(), &moveis); err != nil {
+		return nil, err
+	}
+	return moveis, nil
 }

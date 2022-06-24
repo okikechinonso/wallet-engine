@@ -14,6 +14,7 @@ type Persistor interface {
 	CreateTransaction (transaction *entity.Transaction) error
 	UpdateWallet (wallet entity.Wallet) error
 	ActiveWallet (wallet entity.Wallet) error
+	GetMovies(page int) ([]entity.Movie, error)
 }
 
 type Getter interface {

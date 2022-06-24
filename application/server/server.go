@@ -21,6 +21,7 @@ func (s *Server) DefineRoute(router *gin.Engine) {
 	apirouter := router.Group("/api/v1")
 	apirouter.POST("/create", s.App.CreateWallet())
 	apirouter.POST("/login", s.App.Login())
+	apirouter.GET("/movies",s.App.GetMovies())
 
 	authorized := apirouter.Group("/")
 	authorized.Use(middleware.Authorize(s.App.DB.FindUserByEmail, s.App.DB.TokenInBlacklist))
