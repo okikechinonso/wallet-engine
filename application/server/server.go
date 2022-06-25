@@ -21,7 +21,7 @@ func (s *Server) DefineRoute(router *gin.Engine) {
 	apirouter := router.Group("/api/v1")
 	apirouter.POST("/create", s.App.CreateWallet())
 	apirouter.POST("/login", s.App.Login())
-	apirouter.GET("/movies",s.App.GetComment())
+	apirouter.GET("/comments",s.App.GetComment())
 	apirouter.GET("/comment",s.App.GetCommentByEmail())
 	apirouter.GET("/comment/date",s.App.GetByDateRange())
 

@@ -38,11 +38,11 @@ func (a *App) GetCommentByEmail() gin.HandlerFunc{
 			ctx.JSON(http.StatusBadRequest, "Enter a valid fields")
 		}
 
-		if _,ok := mp["id"]; !ok{
+		if _,ok := mp["email"]; !ok{
 			log.Print(mp)
 			ctx.JSON(http.StatusInternalServerError, "Must container email field")
 		}
-		movie, err := a.DB.GetCommentByEmail(mp["id"])
+		movie, err := a.DB.GetCommentByEmail(mp["email"])
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, err.Error())
 		}
