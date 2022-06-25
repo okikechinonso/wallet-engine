@@ -3,9 +3,11 @@ package db
 import (
 	"context"
 	"log"
+	"time"
 	"wallet-engine/domain/entity"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -70,6 +72,38 @@ func (d Database) GetMovies(page int) ([]entity.Movie, error) {
 	option := options.FindOptions{Limit: &l, Skip: &skip}
 	filter := bson.D{}
 	coll := d.Client.Database("sample_mflix").Collection("comments")
+
+	cursor, err := coll.Find(context.TODO(), filter, &option)
+	if err != nil {
+		log.Print("here")
+		return nil, err
+	}
+	moveis := []entity.Movie{}
+	if err = cursor.All(context.TODO(), &moveis); err != nil {
+		return nil, err
+	}
+	return moveis, nil
+}
+
+func (d Database) GetCommentByEmail(email string) (entity.Movie,error){
+	filter := bson.D{{"email",email}}
+	coll := d.Client.Database("sample_mflix").Collection("comments")
+	
+	var res entity.Movie
+	 err := coll.FindOne(context.TODO(), filter).Decode(&res)
+	 if err != nil {
+		log.Println("here")
+		return res, err
+	}
+	return res, nil
+}
+func (d Database) GetCommentByDate(from, to time.Time, page int) ([]entity.Movie, error){
+	l := int64(limit)
+	skip := int64((page * limit) - limit)
+	option := options.FindOptions{Limit: &l, Skip: &skip}
+	filter := bson.M{"date": bson.M{"$gte": primitive.NewDateTimeFromTime(from),"$lt":primitive.NewDateTimeFromTime(to)}}
+	coll := d.Client.Database("sample_mflix").Collection("comments")
+
 
 	cursor, err := coll.Find(context.TODO(), filter, &option)
 	if err != nil {
