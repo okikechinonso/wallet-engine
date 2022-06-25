@@ -61,19 +61,20 @@ func (a *App) GetByDateRange() gin.HandlerFunc{
 			return
 		}
 		err = ctx.ShouldBindJSON(&mp)
-		log.Print(mp)
 		if err != nil{
-			
 			ctx.JSON(http.StatusBadRequest, "Enter a valid fields")
+			return
 		}
 
-		if _,ok := mp["id"]; !ok{
+		if _,ok := mp["to"]; !ok{
 			log.Print(mp)
 			ctx.JSON(http.StatusInternalServerError, "Must container email field")
+			return
 		}
-		movie, err := a.DB.GetCommentByDate(mp["to"],mp["from"],page)
+		movie, err := a.DB.GetCommentByDate(mp["from"],mp["to"],page)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, err.Error())
+			return
 		}
 		ctx.JSON(http.StatusAccepted, movie)
 	}
