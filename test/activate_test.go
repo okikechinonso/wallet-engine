@@ -21,7 +21,6 @@ import (
 	"wallet-engine/mock"
 )
 
-// test activate wallect function
 func TestActivateWallet(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockedDB := mock.NewMockPersistor(ctrl)
