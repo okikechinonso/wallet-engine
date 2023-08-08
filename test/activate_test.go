@@ -21,6 +21,7 @@ import (
 	"wallet-engine/mock"
 )
 
+// add comments for readability
 func TestActivateWallet(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockedDB := mock.NewMockPersistor(ctrl)
